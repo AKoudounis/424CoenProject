@@ -18,6 +18,7 @@ db = firestore.Client()
 ENDPOINT_ID = os.getenv("ENDPOINT_ID")
 PROJECT_ID = os.getenv("PROJECT_ID")
 REGION = os.getenv("REGION")
+BUCKET_NAME = os.gentenv("BUCKET_NAME")
 
 # Initialize Vertex AI
 aiplatform.init(project=PROJECT_ID, location=REGION)
@@ -40,12 +41,12 @@ def upload_file():
             return 'No selected file', 400
         
         if file and file.filename.endswith('.csv'):
-            # Save file to /tmp directory
-            filepath = os.path.join('/tmp', file.filename)
-            file.save(filepath)
+            # Upload the file directly to the Cloud Storage bucket
+            blob = storage_client.bucket(BUCKET_NAME).blob(file.filename)
+            blob.upload_from_file(file)
 
-            # Process the file and store results in Firestore
-            process_file(filepath, file.filename)
+            # Process the file (pass the Cloud Storage filename)
+            process_file(blob.name)  # Use the blob name (file name)
 
             # Store the filename in session
             session['last_uploaded_file'] = file.filename
@@ -58,9 +59,14 @@ def upload_file():
         logging.error(f"Error in upload_file: {e}")
         return f"Error: {e}", 500
 
-def process_file(filepath, filename):
+def process_file(filename):
     try:
-        df = pd.read_csv(filepath)
+        # Access the file from Cloud Storage
+        blob = storage_client.bucket(BUCKET_NAME).blob(filename)
+        file_contents = blob.download_as_text()
+
+        # Process the CSV contents directly (no need for local saving)
+        df = pd.read_csv(io.StringIO(file_contents))
 
         # Ensure the 'Date' column is in the correct format
         if 'Date' in df.columns:
@@ -91,7 +97,7 @@ def process_file(filepath, filename):
         for index, row in df.iterrows():
             row_dict = row.to_dict()
             row_dict['filename'] = filename  # Store filename
-            
+
             # Safely access 'is_fraud' from predictions
             if 'predictions' in prediction and index < len(prediction.predictions):
                 is_fraud = prediction.predictions[index].get('is_fraud', False)  # Default to False if not present
@@ -102,7 +108,7 @@ def process_file(filepath, filename):
 
             # Add to Firestore
             db.collection('transactions').add(row_dict)
-        
+
         logging.info(f"Processed file '{filename}' and stored results in Firestore.")
     except Exception as e:
         logging.error(f"Error in process_file: {e}")

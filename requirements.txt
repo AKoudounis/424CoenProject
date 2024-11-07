@@ -4,4 +4,4 @@ google-cloud-firestore
 google-cloud-storage
 google-cloud-aiplatform
 gunicorn
-python-dotenv
+io
