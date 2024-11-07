@@ -3,7 +3,7 @@ name: Deploy to Google App Engine with Docker
 on:
   push:
     branches:
-      - main  # Adjust branch as necessary
+      - main
 
 jobs:
   deploy:
@@ -21,7 +21,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/your-app-name
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/your-app-name .
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/your-app-name
 
     - name: Deploy to Google App Engine
