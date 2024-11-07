@@ -39,6 +39,15 @@ jobs:
           echo "$GCP_SA_KEY" > "${HOME}/gcp-key.json"
           gcloud auth activate-service-account --key-file="${HOME}/gcp-key.json"
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          
+          
+      - name: Run application
+        env:
+        ENDPOINT_ID: ${{ secrets.ENDPOINT_ID }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        REGION: ${{ secrets.REGION }}
+      run: |
+        python app.py
 
       # Step 5: Deploy to Google App Engine
       - name: Deploy to App Engine
