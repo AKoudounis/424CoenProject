@@ -19,7 +19,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-
+          
+      - name: Check /tmp directory permissions
+        run: |
+          ls -ld /tmp
+          touch /tmp/test_file && echo "Write permission check passed" > /tmp/test_file
+          
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
