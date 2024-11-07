@@ -3,7 +3,7 @@ name: Deploy to Google App Engine
 on:
   push:
     branches:
-      - main  # Trigger deployment on pushes to the main branch
+      - main  # Adjust branch as necessary
 
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'  # Specify the Python version your app uses
+          python-version: '3.8'
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -26,13 +26,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Authenticate with Google Cloud
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}  # This is your Google Cloud service account JSON key
-          export_default_credentials: true
+      # Step 4: Authenticate with Google Cloud using the service account key
+      - name: Authenticate to Google Cloud
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          echo "$GCP_SA_KEY" > "${HOME}/gcp-key.json"
+          gcloud auth activate-service-account --key-file="${HOME}/gcp-key.json"
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
       # Step 5: Deploy to Google App Engine
       - name: Deploy to App Engine
