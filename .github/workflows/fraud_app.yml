@@ -43,11 +43,11 @@ jobs:
           
       - name: Run application
         env:
-        ENDPOINT_ID: ${{ secrets.ENDPOINT_ID }}
-        PROJECT_ID: ${{ secrets.PROJECT_ID }}
-        REGION: ${{ secrets.REGION }}
-      run: |
-        python app.py
+            ENDPOINT_ID: ${{ secrets.ENDPOINT_ID }}
+            PROJECT_ID: ${{ secrets.PROJECT_ID }}
+            REGION: ${{ secrets.REGION }}
+        run: |
+            python app.py
 
       # Step 5: Deploy to Google App Engine
       - name: Deploy to App Engine
