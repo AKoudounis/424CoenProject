@@ -1,10 +1,11 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 import os
 import pandas as pd
-from google.cloud import firestore
+from google.cloud import firestore, storage
 from google.cloud import aiplatform
 import logging
 from dotenv import load_dotenv
+import io
 
 load_dotenv()
 
@@ -13,6 +14,9 @@ app.secret_key = os.urandom(24)  # Required for session management
 
 # Initialize Firestore
 db = firestore.Client()
+
+# Initialize Cloud Storage client
+storage_client = storage.Client()  # Initialize the storage client
 
 # Constants for Vertex AI
 ENDPOINT_ID = os.getenv("ENDPOINT_ID")
