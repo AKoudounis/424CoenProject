@@ -48,7 +48,7 @@ def upload_file():
             # Upload the file directly to the Cloud Storage bucket
             blob = storage_client.bucket(BUCKET_NAME).blob(file.filename)
             blob.upload_from_file(file)
-            time.sleep(5)  # Adjust this delay based on your needs
+            
 
 
             # Process the file (pass the Cloud Storage filename)
