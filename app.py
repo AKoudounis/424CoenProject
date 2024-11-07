@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 import os
-import time
 import pandas as pd
 from google.cloud import firestore, storage
 from google.cloud import aiplatform
@@ -63,8 +62,8 @@ def upload_file():
         else:
             return 'Invalid file type', 400
     except Exception as e:
-        logging.error(f"Error in upload_file: {e}")
-        return f"Error: {e}", 500
+        logging.error(f"Error in upload_file: {e}", exc_info=True)
+        return f"Error: {str(e)}", 500
 
 def process_file(filename):
     try:
