@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Results</title>
+</head>
+<body>
+    <h1>Transaction Results</h1>
+    <table border="1">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Amount</th>
+            <th>Date</th>
+			<th>Location</th>
+			<th>Time</th>
+            <th>Fraud Status</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result[0] }}</td>
+            <td>{{ result[1] }}</td>
+            <td>{{ result[2] }}</td>
+            <td>{{ result[3] }}</td>
+			<td>{{ result[4] }}</td>
+            <td>{{ result[5] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Pagination controls -->
+    <div>
+        {% if page > 1 %}
+        <a href="{{ url_for('fetch_results', page=page-1) }}">Previous</a>
+        {% endif %}
+        
+        {% if page < total_pages %}
+        <a href="{{ url_for('fetch_results', page=page+1) }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>
