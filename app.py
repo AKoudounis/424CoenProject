@@ -18,7 +18,7 @@ db = firestore.Client()
 ENDPOINT_ID = os.getenv("ENDPOINT_ID")
 PROJECT_ID = os.getenv("PROJECT_ID")
 REGION = os.getenv("REGION")
-BUCKET_NAME = os.gentenv("BUCKET_NAME")
+BUCKET_NAME = os.getenv("BUCKET_NAME")
 
 # Initialize Vertex AI
 aiplatform.init(project=PROJECT_ID, location=REGION)
