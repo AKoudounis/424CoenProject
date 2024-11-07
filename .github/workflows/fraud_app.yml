@@ -35,9 +35,7 @@ jobs:
       - name: Authenticate to Google Cloud
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          ENDPOINT_ID: ${{ secrets.ENDPOINT_ID }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          REGION: ${{ secrets.REGION }}
+          
         run: |
           echo "$GCP_SA_KEY" > "${HOME}/gcp-key.json"
           gcloud auth activate-service-account --key-file="${HOME}/gcp-key.json"
